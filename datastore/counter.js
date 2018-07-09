@@ -16,7 +16,19 @@ const zeroPaddedNumber = (num) => {
 };
 
 const readCounter = (callback) => {
-  fs.readFile(exports.counterFile, (err, fileData) => {
+      //const readCounter = function (function (err, filedataNum) {
+      //   var counter = fileDataNum;
+      // counter++;
+      // })
+ 
+    //fs.readFile(exports.counterFile, function (err,filedata) {
+    //    if (err) {
+    //   callback(null, 0);
+    // } else {
+    //   callback(null, Number(fileData));
+    // }
+   // }
+    fs.readFile(exports.counterFile, (err, fileData) => {
     if (err) {
       callback(null, 0);
     } else {
@@ -27,6 +39,20 @@ const readCounter = (callback) => {
 };
 
 const writeCounter = (count, callback) => {
+  /*const writeCounter = function (count, function(err, counterNumstring) {
+      callback (null, counterNumstring)
+    }) {
+      var counterString = zeroPaddedNumber(count);
+  fs.writeFile(exports.counterFile, counterString, (err) => {
+    if (err) {
+      throw ('error writing counter');
+    } else {
+      callback(null, counterString);
+    }
+  })
+   
+   }
+   */
   var counterString = zeroPaddedNumber(count);
   fs.writeFile(exports.counterFile, counterString, (err) => {
     if (err) {
@@ -41,7 +67,13 @@ const writeCounter = (count, callback) => {
 
 //exports.getNextUniqueId = () => {
   exports.getNextUniqueId = (callback) => {
-    readCounter((err, fileDataNum) => {
+    //exports.getNextUniqueId = function (callback) {
+   
+      //readCounter(function (err, filedataNum) {
+      //   var counter = fileDataNum;
+      // counter++;
+      // })
+       readCounter((err, fileDataNum) => {
       var counter = fileDataNum;
       counter++;
     writeCounter(counter, function(err, counterNumstring) {

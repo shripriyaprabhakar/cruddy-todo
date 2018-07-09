@@ -9,6 +9,19 @@ var items = {};
 
 exports.create = (text, callback) => {
   counter.getNextUniqueId((err, id) => {
+    /*
+    counter.getNextUniqueId(function(err, id) {
+     var filepath = path.join(exports.dataDir, id + '.txt');
+    fs.writeFile(filepath, text, function (err) {
+         if (err) {
+        callback(err);
+      } else {
+        callback(null, {id: id, text: text});
+      }
+
+      }
+    }
+    */
     var filepath = path.join(exports.dataDir, id + '.txt'); // /user/nme/Desktop/hrsf99.../data/00001.txt
     fs.writeFile(filepath, text, (err) => {
       if (err) {
@@ -41,30 +54,44 @@ exports.readAll = (callback) => {
     if (err) {
       throw ('error reading data folder');
     }
+    // for each file
     var data = _.map(files, (file) => {
+      //remove .txt attached to the file use path.basename
       var id = path.basename(file, '.txt');
+      // join the file to directory path 
       var filepath = path.join(exports.dataDir, file);
+          // reads the files in filepath and for each file data
       return readFilePromise(filepath).then(fileData => {
+        //returns an object with id and text, filedata to string
         return {
           id: id,
           text: fileData.toString()
         };
       });
     });
+    // waits till all promises are completed
     Promise.all(data)
+    //then do a callback on items. items are objects that were created
+    // items are objects. Promise creates an array of promises
+    // each item undergoes promise from array
       .then(items => callback(null, items), err => callback(err));
   });
 };
 
 exports.update = (id, text, callback) => {
+  // join the data dir with the id and text so that file name is 0001.txt
   let filepath = path.join(exports.dataDir, `${id}.txt`);
+  //if that filepath doesnot exist
   if (!fs.existsSync(filepath)) {
+    //throw error
     callback(new Error('Tried to update nonexistent message'));
   } else {
+
     fs.writeFile(filepath, text, err => {
       if (err) {
         callback(err);
       } else {
+        // else do call back on the id and text - i.e, update id and text
         callback(null, { id: id, text: text });
       }
     });
